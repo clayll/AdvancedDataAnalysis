@@ -64,7 +64,7 @@ sns.countplot(y='age',data=dataset_bin)
 plt.subplot(122)
 sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'], kde_kws={"label": "<$50K"})
 sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'], kde_kws={"label": ">=$50K"})
-plt.show()
+# plt.show()
 
 
 # 标签处理
@@ -102,4 +102,10 @@ def plot_distribution(dataset :pd.DataFrame,cols=3,width=40,height=15):
 # plt.show()
 # msno.matrix(df=training_raw)
 # plt.show()
-
+print (pd.cut(dataset_raw.age,10))
+plt.figure(figsize=(10,5))
+plt.subplot(121)
+sns.countplot(data=dataset_con,y='age',hue='predclass')
+plt.subplot(122)
+sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'],kde_kws={"label":">50k"})
+sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'],kde_kws={"label": "<=50K"})
