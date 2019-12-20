@@ -109,3 +109,19 @@ sns.countplot(data=dataset_con,y='age',hue='predclass')
 plt.subplot(122)
 sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'],kde_kws={"label":">50k"})
 sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'],kde_kws={"label": "<=50K"})
+
+
+def plot_bivariate_bar(dataset :pd.DataFrame,hue,cols=3,width=20,height=15):
+    rows = math.ceil(dataset.shape[1]/cols)
+    plt.figure(figsize=(width,height))
+    plt.subplots_adjust(wspace=0.5,hspace=0.5)
+    dataset.select_dtypes(include='object')
+    for index,column in enumerate(dataset.columns):
+        plt.subplot(rows,cols,index+1)
+        plt.xticks(rotation=25)
+        if np.object == dataset[column].dtype:
+            g = sns.countplot(y=column,data=dataset,hue=hue)
+            g.set_title(column)
+            dataset['age'].astype()
+        # g.set_xlabel("数量")
+        # g.set_yticklabels([i if len(i) < 12 else i[0:12]+'..' for i  in dataset[column].values])
