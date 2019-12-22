@@ -48,9 +48,9 @@ dataset_raw.loc[dataset_raw.predclass == ' >50K.','predclass'] = 1
 
 dataset_bin['predclass'] = dataset_raw['predclass']
 dataset_con['predclass'] = dataset_raw['predclass']
-
-g = sns.countplot(y ='predclass',data=dataset_raw)
-g.set_title('predclass')
+#
+# g = sns.countplot(y ='predclass',data=dataset_raw)
+# g.set_title('predclass')
 
 
 # 处理age列，分为连续变量和随机变量
@@ -58,12 +58,12 @@ dataset_bin['age'] = pd.cut(x=dataset_raw.age,bins=10)
 dataset_con['age'] = dataset_raw.age
 
 print(dataset_bin.head(10))
-plt.figure(figsize=(10,5))
-plt.subplot(121)
-sns.countplot(y='age',data=dataset_bin)
-plt.subplot(122)
-sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'], kde_kws={"label": "<$50K"})
-sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'], kde_kws={"label": ">=$50K"})
+# plt.figure(figsize=(10,5))
+# plt.subplot(121)
+# sns.countplot(y='age',data=dataset_bin)
+# plt.subplot(122)
+# sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'], kde_kws={"label": "<$50K"})
+# sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'], kde_kws={"label": ">=$50K"})
 # plt.show()
 
 
@@ -103,12 +103,12 @@ def plot_distribution(dataset :pd.DataFrame,cols=3,width=40,height=15):
 # msno.matrix(df=training_raw)
 # plt.show()
 print (pd.cut(dataset_raw.age,10))
-plt.figure(figsize=(10,5))
-plt.subplot(121)
-sns.countplot(data=dataset_con,y='age',hue='predclass')
-plt.subplot(122)
-sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'],kde_kws={"label":">50k"})
-sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'],kde_kws={"label": "<=50K"})
+# plt.figure(figsize=(10,5))
+# plt.subplot(121)
+# sns.countplot(data=dataset_con,y='age',hue='predclass')
+# plt.subplot(122)
+# sns.distplot(dataset_con.loc[dataset_con.predclass==1,'age'],kde_kws={"label":">50k"})
+# sns.distplot(dataset_con.loc[dataset_con.predclass==0,'age'],kde_kws={"label": "<=50K"})
 
 
 def plot_bivariate_bar(dataset :pd.DataFrame,hue,cols=3,width=20,height=15):
@@ -125,3 +125,46 @@ def plot_bivariate_bar(dataset :pd.DataFrame,hue,cols=3,width=20,height=15):
             dataset['age'].astype()
         # g.set_xlabel("数量")
         # g.set_yticklabels([i if len(i) < 12 else i[0:12]+'..' for i  in dataset[column].values])
+
+# sns.boxplot(data=dataset_raw,hue='predclass',y='education-num',x = 'marital-status')
+# g = sns.FacetGrid(data=dataset_raw,col='marital-status', size=4, aspect=.7)
+# g.map(sns.boxplot,'predclass','education-num')
+
+# plt.figure(figsize=(20,15))
+# plt.subplot(131)
+# sns.violinplot(data=dataset_raw,x='predclass',y='education-num',hue='sex',palette="muted",split=True,scale='count')
+# plt.subplot(132)
+# sns.violinplot(data=dataset_raw,x='predclass',y='age',hue='sex',palette="muted",split=True,scale='count')
+# plt.subplot(133)
+# sns.violinplot(data=dataset_raw,x='predclass',y='hours-per-week',hue='sex',palette="muted",split=True,scale='count')
+
+plt.figure(figsize=(20,30))
+print(dataset_raw.dtypes['predclass'])
+# 不同特征之间的散点图分布
+# g = sns.pairplot(data= dataset_raw[['age','education-num','hours-per-week','capital-gain','capital-loss','predclass']],
+#              hue='predclass',vars=dataset_raw[['age','education-num','hours-per-week','capital-gain','capital-loss','predclass']].columns[:-1],
+#              size=4);
+# # g.map_diag(sns.distplot)
+# g.map_offdiag(sns.scatterplot)
+
+
+
+# dataset_raw['age-hours'] = dataset_raw['age']*dataset_raw['hours-per-week']
+# # dataset_bin['age-hours'] = pd.cut(dataset_raw['age-hours'],10)
+# # dataset_con['age-hours'] = dataset_raw['age-hours']
+# #
+# # plt.figure(figsize=(20,5))
+# # plt.subplot(121)
+# # sns.countplot(data=dataset_bin,y='age-hours')
+# # plt.subplot(122)
+# # sns.distplot(dataset_con['age-hours'])
+# # plt.show()
+
+# 性别和婚姻
+dataset_raw['sex-marital']  = dataset_raw['sex'] + dataset_raw['marital-status']
+dataset_con['sex-marital']  = dataset_raw['sex-marital']
+dataset_bin['sex-marital']  = dataset_raw['sex-marital']
+print(dataset_bin['sex-marital'].unique())
+# plt.style.use('seaborn-whitegrid')
+# fig = plt.figure(figsize=(20,5))
+# sns.countplot(y="sex-marital", data=dataset_bin);
