@@ -168,3 +168,15 @@ print(dataset_bin['sex-marital'].unique())
 # plt.style.use('seaborn-whitegrid')
 # fig = plt.figure(figsize=(20,5))
 # sns.countplot(y="sex-marital", data=dataset_bin);
+
+test_pd = pd.DataFrame(data={'L1':[1,2,3],'L2':['a','b','c']})
+test_pd['L1'] = test_pd['L1'].astype(np.object)
+print(pd.get_dummies(test_pd))
+
+print(test_pd['L2'].factorize())
+
+dataset_bin_columns = dataset_bin.columns.tolist()
+dataset_bin_columns.remove('predclass')
+print(dataset_bin_columns)
+dataset_bin_columns = pd.get_dummies(dataset_bin,columns=dataset_bin_columns)
+print(dataset_bin)
