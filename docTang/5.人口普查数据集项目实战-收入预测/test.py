@@ -169,14 +169,63 @@ print(dataset_bin['sex-marital'].unique())
 # fig = plt.figure(figsize=(20,5))
 # sns.countplot(y="sex-marital", data=dataset_bin);
 
-test_pd = pd.DataFrame(data={'L1':[1,2,3],'L2':['a','b','c']})
-test_pd['L1'] = test_pd['L1'].astype(np.object)
-print(pd.get_dummies(test_pd))
+# test_pd = pd.DataFrame(data={'L1':[1,2,3],'L2':['a','b','c']})
+# test_pd['L1'] = test_pd['L1'].astype(np.object)
+# print(pd.get_dummies(test_pd))
+#
+# print(test_pd['L2'].factorize())
+#
+# dataset_bin_columns = dataset_bin.columns.tolist()
+# dataset_bin_columns.remove('predclass')
+# print(dataset_bin_columns)
+# dataset_bin_columns = pd.get_dummies(dataset_bin,columns=dataset_bin_columns)
+# print(dataset_bin)
 
-print(test_pd['L2'].factorize())
+a = [[1,4],[3,2]]
+print(np.cov(a))
 
-dataset_bin_columns = dataset_bin.columns.tolist()
-dataset_bin_columns.remove('predclass')
-print(dataset_bin_columns)
-dataset_bin_columns = pd.get_dummies(dataset_bin,columns=dataset_bin_columns)
-print(dataset_bin)
+# a=np.array([1,2,3])
+# b=np.array([1,2,4])
+# x=np.vstack((a,b))
+# print(x)#打印x的值
+# print(np.cov(a,b))#计算协方差矩阵
+# corr_coef = np.corrcoef(a,b)[0,1]#这里取得是第 0行 第2列的元素，为两者相关系数
+# print(corr_coef)
+
+#
+# a=np.array([-1,-1,0,2,0])
+# b=np.array([-2,0,0,1,1])
+# x=np.vstack((a,b))
+# print(x)#打印x的值
+# print(np.cov(a,b))#计算协方差矩阵
+# corr_coef = np.corrcoef(a,b)[0,1]#这里取得是第 0行 第2列的元素，为两者相关系数
+# print(corr_coef)
+from sklearn.preprocessing import LabelEncoder
+print(dataset_raw.corr())
+
+
+dataset_con_test = dataset_raw
+
+mask = np.zeros_like(dataset_raw.corr(), dtype=np.bool)
+mask[np.triu_indices_from(mask)] = True
+sns.heatmap(data=dataset_raw.corr(),cmap=sns.color_palette("RdBu_r", 100),square=True)
+plt.show()
+
+# dataset_con_test['marital-status'] = dataset_con['marital-status'].factorize()[0]
+
+
+# dataset_con_enc = dataset_con_test.apply(LabelEncoder().fit_transform)
+#
+# print(dataset_con_enc.head())
+
+# -*- coding: utf-8 -*-
+# from sklearn.preprocessing import LabelEncoder
+# # le = LabelEncoder().fit(list("abcde"))
+# # le_transform = le.transform(['a','b','c'])
+#
+# le = LabelEncoder().fit_transform(list("abcde"))
+#
+# print(le)
+"""
+[4 2 1]
+"""
