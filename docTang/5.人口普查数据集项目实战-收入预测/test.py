@@ -209,7 +209,7 @@ dataset_con_test = dataset_raw
 mask = np.zeros_like(dataset_raw.corr(), dtype=np.bool)
 mask[np.triu_indices_from(mask)] = True
 sns.heatmap(data=dataset_raw.corr(),cmap=sns.color_palette("RdBu_r", 100),square=True)
-plt.show()
+# plt.show()
 
 # dataset_con_test['marital-status'] = dataset_con['marital-status'].factorize()[0]
 
@@ -223,9 +223,31 @@ plt.show()
 # # le = LabelEncoder().fit(list("abcde"))
 # # le_transform = le.transform(['a','b','c'])
 #
-# le = LabelEncoder().fit_transform(list("abcde"))
-#
+# te = pd.DataFrame(data={"l1":[1,2,3],"l2":['a','b','c']})
+# le = te.apply(LabelEncoder().fit_transform)
 # print(le)
-"""
-[4 2 1]
-"""
+# # print(te)
+#
+# print(dataset_con.describe(include='all'))
+from sklearn.ensemble import RandomForestClassifier
+data_set = dataset_raw
+data_set = data_set.apply(LabelEncoder().fit_transform)
+r = RandomForestClassifier()
+r.fit(X=data_set.drop('predclass',axis=1),y=data_set.predclass)
+importance = (r.feature_importances_)
+
+rs = pd.DataFrame(data=importance,index=data_set.drop('predclass',axis=1).columns,columns=['importance'])
+print(rs)
+rs.sort_values(by='importance').plot(kind='barh')
+
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.decomposition import PCA
+scaler = StandardScaler().fit(X=data_set.drop('predclass',axis=1))
+X = scaler.transform(X=data_set.drop('predclass',axis=1))
+fit1  = PCA( n_components= len(data_set.columns)-1)
+
+plt.figure(figsize=(20,5))
+plt.subplot(121)
+plt.bar(range(0,fit1.explained_variance_ratio_.size),fit1.explained_variance_ratio_)
+
