@@ -243,11 +243,40 @@ rs.sort_values(by='importance').plot(kind='barh')
 from sklearn.preprocessing import StandardScaler
 
 from sklearn.decomposition import PCA
+
 scaler = StandardScaler().fit(X=data_set.drop('predclass',axis=1))
 X = scaler.transform(X=data_set.drop('predclass',axis=1))
-fit1  = PCA( n_components= len(data_set.columns)-1)
+fit1  = PCA(n_components= len(data_set.columns)-1)
 
-plt.figure(figsize=(20,5))
-plt.subplot(121)
-plt.bar(range(0,fit1.explained_variance_ratio_.size),fit1.explained_variance_ratio_)
+# plt.figure(figsize=(20,5))
+# plt.subplot(121)
+# # plt.bar(range(0,fit1.explained_variance_ratio_.size),fit1.explained_variance_ratio_)
+#
+#
+# # Formatting
+# target_names = [0,1]
+# colors = ['navy','darkorange']
+# lw = 2
+# alpha = 0.3
+#
+# z = zip(colors, [0, 1], target_names)
+# print(list(z))
+#
+# ax = plt.subplot(1, 2, 2, projection='3d')
 
+from sklearn.feature_selection import RFECV
+from sklearn.linear_model import  LogisticRegression
+# selector1 = RFECV(LogisticRegression(), step=1, cv=5, n_jobs=-1)
+# # selector1 = selector1.fit(data_set.drop('predclass', axis=1).values, data_set['predclass'].values)
+# # print("Feature Ranking For Non-Discretised: %s" % selector1.ranking_)
+# # print("Optimal number of features : %d" % selector1.n_features_)
+# # print(" The mask of selected features:%s" % selector1.support_)
+# # print(" The mask of selected features:%s" % selector1.support_)
+# # print(np.insert(selector1.support_, 0, True))
+lr = LogisticRegression()
+from sklearn.model_selection import RandomizedSearchCV
+param_dist = {'penalty': ['l2', 'l1'],
+                         'class_weight': [None, 'balanced'],
+                         'C': np.logspace(-20, 20, 10000),
+                         'intercept_scaling': np.logspace(-20, 20, 10000)}
+RandomizedSearchCV(lr,param_distributions=param_dist,n_jobs=-1)
