@@ -1,5 +1,7 @@
 import pandas as pd
+import numpy as np
 
+import matplotlib.pyplot as plt; plt.rcdefaults()
 
 #把数据读入
 
@@ -23,13 +25,59 @@ print(user_playcount.head())
 
 ## 歌曲基本信息
 track_metadata = pd.read_csv(r"C:\Users\刘靓\Desktop\推荐数据\track_metadata_df_sub.csv",encoding='gbk')
-print(track_metadata[track_metadata.song_id=='SOBONKR12A58A7A7E0'])
+print(track_metadata.columns)
 
 ## 清洗数据集
 ### 去除掉无用的和重复的，数据清洗是很重要的一步
-def qingxi():
-    print(song_playcount.shape)
-    print( user_playcount.shape)
-    print(track_metadata.shape)
+def qingxi(triplet_dataset_sub_song_merged):
+    triplet_dataset_sub_song_merged.rename(columns={'play_count': 'listen_count'}, inplace=True)
+    print(triplet_dataset_sub_song_merged.columns)
+    # 去掉不需要的指标
+    # del (triplet_dataset_sub_song_merged['song_id'])
+    triplet_dataset_sub_song_merged.drop(axis=1, labels='song_id', inplace=True)
+    del (triplet_dataset_sub_song_merged['artist_id'])
+    del (triplet_dataset_sub_song_merged['duration'])
+    del (triplet_dataset_sub_song_merged['artist_familiarity'])
+    del (triplet_dataset_sub_song_merged['artist_hotttnesss'])
+    del (triplet_dataset_sub_song_merged['track_7digitalid'])
+    del (triplet_dataset_sub_song_merged['shs_perf'])
+    del (triplet_dataset_sub_song_merged['shs_work'])
 
-qingxi()
+
+'''合并数据'''
+def mergeData():
+    return track_metadata.merge(right=song_playcount,how='right',left_on= 'song_id',right_on='song')
+
+
+triplet_dataset_sub_song_merged = mergeData()
+
+qingxi(triplet_dataset_sub_song_merged)
+print(triplet_dataset_sub_song_merged.columns)
+print(triplet_dataset_sub_song_merged.head())
+# triplet_dataset_sub_song_merged.sort_values(by='listen_count',ascending=False)
+
+
+#展示最流行的歌曲
+plt.subplot(221)
+popsong = triplet_dataset_sub_song_merged[['title','listen_count']].sort_values(by='listen_count',ascending=False).reset_index()
+plt.bar(x=popsong.loc[0:20,'title'],height=popsong.loc[0:20,'listen_count'])
+plt.xticks( rotation='vertical')
+# 最受欢迎的releases
+plt.subplot(222)
+popreleases = triplet_dataset_sub_song_merged.groupby(by='release').sum().sort_values(by='listen_count',ascending=False).head(20).reset_index()
+plt.bar(x=popreleases['release'],height=popreleases['listen_count'])
+plt.xticks(rotation='vertical')
+
+plt.subplot(223)
+# 最受欢迎的歌手
+popartist = triplet_dataset_sub_song_merged.groupby(by='artist_name').sum().sort_values(by='listen_count',ascending=False).head(20).reset_index()
+plt.bar(x=popartist['artist_name'],height=popartist['listen_count'])
+plt.xticks(rotation='vertical')
+plt.subplot(224)
+
+popuser = user_playcount.groupby(by='user').sum().sort_values(by='play_count',ascending=False).reset_index()
+plt.hist(x=popuser['play_count'],bins=50)
+plt.grid(True)
+plt.show()
+
+
