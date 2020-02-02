@@ -7,6 +7,7 @@
 
 from numpy import *
 from numpy import linalg as la
+# import numpy as np
 
 
 def loadDataSet():
@@ -136,6 +137,9 @@ if __name__ == "__main__":
     print("Sigma:\n", Sigma)
     print("---------------重构原始矩阵dataMat------------")
     Sigma3 = mat([[Sigma[0], 0, 0], [0, Sigma[1], 0], [0, 0, Sigma[2]]])
+    # Sigma3 = mat(np.zeros((3,3),dtype=float))
+    # for i in range(3):
+    #     Sigma3[i,i] = Sigma[i]
     dataMatload = U[:, :3] * Sigma3 * VT[:3, :]
     print("重构的原始矩阵:\n", dataMatload)
     print("----------------几种相似度计算方法-----------------")
@@ -165,3 +169,79 @@ if __name__ == "__main__":
     print("使用默认相似度的SVD进行评分:", recommend(myData3, user=1, estMethod=svdEst))
     print("使用皮尔逊系数的SVD进行评分:", recommend(myData3, user=1,
                                   estMethod=svdEst, simMeas=pearSim))
+#
+# a = [[5,5,0,5],[5,0,3,4],[3,4,0,3],[0,0,5,3],[5,4,4,5],[5,4,5,5]]
+# u,s,v = la.svd(a)
+# print('-'*50)
+# print(corrcoef(a))
+# print(cov(a))
+# a1 = [[2,1,5],[7,3,0]]
+# print(var(a1,axis=0))
+# print(var(a1,axis=1))
+#
+#
+# a = [1, 2, 3, 4, 6]
+# print(np.cov(a), np.var(a) * len(a) / (len(a) - 1))
+#
+#
+# a = [[1, 2], [4, 7]]
+# b = [[7, 16], [17, 8]]
+# c = np.cov(a, b)
+# print(c)
+# print(np.vstack((a,b)))
+# print(np.cov(np.vstack((a, b))))
+
+
+
+def mean(x):
+  return sum(x) / len(x)
+
+# 计算每一项数据与均值的差
+def de_mean(x):
+  x_bar = mean(x)
+  return [x_i - x_bar for x_i in x]
+
+# 辅助计算函数 dot product 、sum_of_squares
+def dot(v, w):
+  return math.fsum(v_i * w_i for v_i, w_i in zip(v, w))
+
+def sum_of_squares(v):
+  return dot(v, v)
+# 方差
+def variance(x):
+  n = len(x)
+  deviations = de_mean(x)
+  return sum_of_squares(deviations) / (n - 1)
+
+# 标准差
+import math
+def standard_deviation(x):
+  return math.sqrt(variance(x))
+
+# 协方差
+def covariance(x, y):
+  n = len(x)
+  return dot(de_mean(x), de_mean(y)) / (n -1)
+# 相关系数
+def correlation(x, y):
+  stdev_x = standard_deviation(x)
+  stdev_y = standard_deviation(y)
+  if stdev_x > 0 and stdev_y > 0:
+    return covariance(x, y) / stdev_x / stdev_y
+  else:
+    return 0
+
+
+
+a=array([1,2,3])
+b=array([1,2,4])
+
+print(covariance(a,b))
+print(correlation(a,b))
+# print(std(a),std(b))
+# print("相关系数：",1.5/(std(a)*std(b)))
+# x=np.vstack((a,b))
+# print(x)#打印x的值
+# print(np.cov(a,b))#计算协方差矩阵
+# corr_coef = np.corrcoef(a,b)#这里取得是第 0行 第2列的元素，为两者相关系数
+# print(corr_coef)
