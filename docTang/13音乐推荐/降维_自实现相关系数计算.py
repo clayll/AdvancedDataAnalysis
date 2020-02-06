@@ -245,3 +245,13 @@ print(correlation(a,b))
 # print(np.cov(a,b))#计算协方差矩阵
 # corr_coef = np.corrcoef(a,b)#这里取得是第 0行 第2列的元素，为两者相关系数
 # print(corr_coef)
+
+
+
+s = dict()
+s['1'] = {'a'}
+s['2'] = {'b'}
+s['1'].add('a1')
+
+for s1 in s.keys():
+    print(len(s[s1]))
