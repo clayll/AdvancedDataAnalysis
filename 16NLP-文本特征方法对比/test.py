@@ -155,7 +155,7 @@ def plot_LSA(test_data, test_labels, savepath="PCA_demo.csv", plot=True):
 
 fig = plt.figure(figsize=(16, 16))
 plot_LSA(X_train_counts, y_train)
-plt.show()
+# plt.show()
 
 # 进一步核实模型关注点
 def get_most_important_features(vectorizer, model, n=5):
@@ -209,7 +209,7 @@ def plot_important_words(top_scores, top_words, bottom_scores, bottom_words, nam
     plt.xlabel('Importance', fontsize=20)
 
     plt.subplots_adjust(wspace=0.8)
-    plt.show()
+    # plt.show()
 
 
 top_scores = [a[0] for a in importance[1]['tops']]
@@ -218,3 +218,43 @@ bottom_scores = [a[0] for a in importance[1]['bottom']]
 bottom_words = [a[1] for a in importance[1]['bottom']]
 
 plot_important_words(top_scores, top_words, bottom_scores, bottom_words, "Most important words for relevance")
+
+
+# TFIDF Bag of Words
+# 这样我们就不均等对待每一个词了
+
+def tfidf(data):
+    tfidf_vectorizer = TfidfVectorizer()
+
+    train = tfidf_vectorizer.fit_transform(data)
+
+    return train, tfidf_vectorizer
+
+X_train_tfidf, tfidf_vectorizer = tfidf(X_train)
+X_test_tfidf = tfidf_vectorizer.transform(X_test)
+
+fig = plt.figure(figsize=(16, 16))
+plot_LSA(X_train_tfidf, y_train)
+# plt.show()
+
+clf_tfidf = LogisticRegression(C=30.0, class_weight='balanced', solver='newton-cg',
+                         multi_class='multinomial', n_jobs=-1, random_state=40)
+clf_tfidf.fit(X_train_tfidf, y_train)
+
+y_predicted_tfidf = clf_tfidf.predict(X_test_tfidf)
+
+print(classification_report(y_test,y_predicted_tfidf))
+cm2 = confusion_matrix(y_test, y_predicted_tfidf)
+fig = plt.figure(figsize=(10, 10))
+plot = plot_confusion_matrix(cm2, classes=['Irrelevant','Disaster','Unsure'], normalize=False, title='Confusion matrix')
+plt.show()
+print("TFIDF confusion matrix")
+print(cm2)
+print("BoW confusion matrix")
+print(cm)
+
+# 问题
+# 我们现在考虑的是每一个词基于频率的情况，如果在新的测试环境下有些词变了呢？比如说goog和positive.有些词可能表达的意义差不多但是却长得不一样，这样我们的模型就难捕捉到了。
+#
+# word2vec
+# 一句话解释：比较牛逼。。。
