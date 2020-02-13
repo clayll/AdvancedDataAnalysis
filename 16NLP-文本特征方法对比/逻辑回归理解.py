@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
 from sklearn.linear_model import LogisticRegression
 
+
+
 # 构造一些数据点
 centers = [[-5, 0], [0, 1.5], [5, -1]]
 X, y = make_blobs(n_samples=1000, centers=centers, random_state=40)

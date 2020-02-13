@@ -258,3 +258,36 @@ print(cm)
 #
 # word2vec
 # 一句话解释：比较牛逼。。。
+
+# 等待语料库
+
+# 基于深度学习的自然语言处理（CNN与RNN）
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.utils import to_categorical
+
+EMBEDDING_DIM = 300
+MAX_SEQUENCE_LENGTH = 35
+VOCAB_SIZE = len(VOCAB)
+
+VALIDATION_SPLIT=.2
+tokenizer = Tokenizer(num_words=VOCAB_SIZE)
+tokenizer.fit_on_texts(clean_questions["text"].tolist())
+sequences = tokenizer.texts_to_sequences(clean_questions["text"].tolist())
+
+word_index = tokenizer.word_index
+print('Found %s unique tokens.' % len(word_index))
+
+cnn_data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
+labels = to_categorical(np.asarray(clean_questions["class_label"]))
+
+indices = np.arange(cnn_data.shape[0])
+np.random.shuffle(indices)
+cnn_data = cnn_data[indices]
+labels = labels[indices]
+num_validation_samples = int(VALIDATION_SPLIT * cnn_data.shape[0])
+
+embedding_weights = np.zeros((len(word_index)+1, EMBEDDING_DIM))
+for word,index in word_index.items():
+    embedding_weights[index,:] = word2vec[word] if word in word2vec else np.random.rand(EMBEDDING_DIM)
+print(embedding_weights.shape)
